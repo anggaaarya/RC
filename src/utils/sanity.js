@@ -1,4 +1,6 @@
-import { createClient } from "@sanity/client";
+import {
+  createClient
+} from "@sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import CryptoJS from "crypto-js";
 
@@ -8,8 +10,7 @@ export const client = createClient({
   useCdn: false,
   perspective: "published",
   apiVersion: "2023-06-30",
-  token:
-    "skVHprLJ26loj7NeEj2P7A6yNkFHN4XMQMsDfw1tAcp0GuvdaluiYiUHD7uYq44wgvIvdq6Mz3JLN9j0nlttYVhFxgb89CIrk5mWbRxp4JTPqWi1MFttmUpWnrRzIikNJwpI92Lr5l7DjZPgF8mu6YJwY4t0VLGRUpMemZ0joyfNQlCRKkIV",
+  token: "skVHprLJ26loj7NeEj2P7A6yNkFHN4XMQMsDfw1tAcp0GuvdaluiYiUHD7uYq44wgvIvdq6Mz3JLN9j0nlttYVhFxgb89CIrk5mWbRxp4JTPqWi1MFttmUpWnrRzIikNJwpI92Lr5l7DjZPgF8mu6YJwY4t0VLGRUpMemZ0joyfNQlCRKkIV",
 });
 
 const builder = imageUrlBuilder(client);
@@ -20,7 +21,6 @@ export const urlImg = (resource) => {
 
 export const getCars = async () => {
   const res = await client.fetch(`*[_type == "cars" ]`);
-
   return res;
 };
 
@@ -113,9 +113,15 @@ export const setTransaction = async (data) => {
 
   const res = await client.create(docTransaction);
   if (res._id) {
-    return { status: true, id: res._id };
+    return {
+      status: true,
+      id: res._id
+    };
   } else {
-    return { status: false, id: null };
+    return {
+      status: false,
+      id: null
+    };
   }
 };
 

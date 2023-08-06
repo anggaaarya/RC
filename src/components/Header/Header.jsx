@@ -33,15 +33,36 @@ const navLinks = [
     path: "/cars",
     display: "Mobil",
   },
-
-  // {
-  //   path: "/blogs",
-  //   display: "Blog",
-  // },
   {
     path: "/contact",
     display: "Kontak",
   },
+];
+const navLinksMobile = [
+  {
+    path: "/home",
+    display: "Beranda",
+  },
+  {
+    path: "/about",
+    display: "Tentang Kami",
+  },
+  {
+    path: "/cars",
+    display: "Mobil",
+  },
+  {
+    path: "/contact",
+    display: "Kontak",
+  },
+  {
+    path: "#",
+    display: "Login",
+  },
+  {
+    path: "#",
+    display: "Register",
+  }
 ];
 
 const Header = () => {
@@ -62,6 +83,7 @@ const Header = () => {
     password: "",
   });
   const [regisSuccess, setRegisSuccess] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [loginFail, setLoginFail] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
@@ -120,6 +142,15 @@ const Header = () => {
       });
       setUser(JSON.parse(localStorage.getItem("user")));
     }
+
+    // handle user ketika resize browser
+    const handleWindowSizeChange = () => {
+      setWindowWidth(window.innerWidth)
+    };
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
   }, []);
 
   function checkingForm() {
@@ -216,7 +247,7 @@ const Header = () => {
 
                     <Link
                       to="#"
-                      className=" d-flex align-items-center gap-1"
+                      className="d-flex align-items-center gap-1"
                       onClick={() =>
                         dispatch({
                           type: REDUCER_ACTION.toggleModalRegis,
@@ -230,21 +261,21 @@ const Header = () => {
                     </Link>
                   </div>
                 ) : (
-                  <Row style={{ alignItems: "center" }}>
-                    <Col md={10}>
-                      <p
-                        className="header__top__right d-flex align-items-center justify-content-end"
-                        style={{ marginBottom: "0" }}>
-                        Hello, {user.email}
-                      </p>
-                    </Col>
-                    <Col md={2}>
-                      <Button color="secondary" outline onClick={onLogout}>
-                        Logout
+                    <Row style={{ alignItems: "center" }}>
+                      <Col md={10}>
+                        <p
+                          className="header__top__right d-flex align-items-center justify-content-end"
+                          style={{ marginBottom: "0" }}>
+                          Hello, {user.email}
+                        </p>
+                      </Col>
+                      <Col md={2}>
+                        <Button color="secondary" outline onClick={onLogout}>
+                          Logout
                       </Button>
-                    </Col>
-                  </Row>
-                )}
+                      </Col>
+                    </Row>
+                  )}
               </Col>
             </Row>
           </Container>
@@ -320,18 +351,43 @@ const Header = () => {
 
               <div className="navigation" ref={menuRef} onClick={toggleMenu}>
                 <div className="menu">
-                  {navLinks.map((item, index) => (
-                    <NavLink
-                      to={item.path}
-                      className={(navClass) =>
-                        navClass.isActive
-                          ? "nav__active nav__item"
-                          : "nav__item"
-                      }
-                      key={index}>
-                      {item.display}
-                    </NavLink>
-                  ))}
+                  {
+                    windowWidth > 768 ?
+                      navLinks.map((item, index) => (
+                        <NavLink
+                          to={item.path}
+                          className={(navClass) =>
+                            navClass.isActive
+                              ? "nav__active nav__item"
+                              : "nav__item"
+                          }
+                          key={index}>
+                          {item.display}
+                        </NavLink>
+                      )) : navLinksMobile.map((item, index) => (
+                        <NavLink
+                          to={item.path}
+                          onClick={() => {
+                            if (item.path === "#") {
+                              dispatch({
+                                type: REDUCER_ACTION.toggleModalLogin,
+                                payload: {
+                                  key: item.display === 'Login' ? "modalLogin" : "modalRegister",
+                                  value: true,
+                                },
+                              })
+                            }
+                          }
+                          }
+                          className={(navClass) =>
+                            navClass.isActive
+                              ? "nav__active nav__item"
+                              : "nav__item"
+                          }
+                          key={index}>
+                          {item.display}
+                        </NavLink>
+                      ))}
                 </div>
               </div>
 
